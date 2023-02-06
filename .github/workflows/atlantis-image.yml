@@ -63,6 +63,8 @@ jobs:
           type=semver,pattern={{major}}.{{minor}}
           type=raw,value=dev,enable=${{ github.ref == format('refs/heads/{0}', 'master') && matrix.image_type == 'alpine' }}
           type=raw,value=dev,enable={{is_default_branch}},suffix=${{ format('-{0}', matrix.image_type) }}
+          type=raw,value=prerelease-latest,enable=${{ contains(github.ref, 'pre') }}
+          type=raw,value=latest,enable=${{ !contains(github.ref, 'pre') }}
 
     - name: Login to Packages Container registry
       if: false
