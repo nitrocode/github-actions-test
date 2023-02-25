@@ -61,7 +61,7 @@ jobs:
           type=semver,pattern={{version}},enable=${{ matrix.image_type == 'alpine' }}
           type=semver,pattern={{major}}.{{minor}},suffix=${{ env.SUFFIX }}
           # dev
-          type=sha,prefix=dev,suffix=${{ env.SUFFIX }}
+          type=sha,prefix=dev-,suffix=${{ env.SUFFIX }}
           type=raw,event=push,value=dev,enable=${{ github.ref == format('refs/heads/{0}', 'main') && matrix.image_type == 'alpine' }},suffix=
           type=raw,event=push,value=dev,enable={{is_default_branch}},suffix=${{ env.SUFFIX }}
           # prerelease
