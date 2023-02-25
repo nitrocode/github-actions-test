@@ -55,16 +55,27 @@ jobs:
         labels: |
           org.opencontainers.image.licenses=Apache-2.0
         tags: |
+          # semver
           type=semver,pattern={{version}},suffix=${{ env.SUFFIX }}
+          type=semver,pattern={{version}},enable={{ matrix.image_type == 'alpine' }}
           type=semver,pattern={{major}}.{{minor}},suffix=${{ env.SUFFIX }}
+          # dev
           type=raw,event=push,value=dev,enable=${{ github.ref == format('refs/heads/{0}', 'main') && matrix.image_type == 'alpine' }},suffix=
           type=raw,event=push,value=dev,enable={{is_default_branch}},suffix=${{ env.SUFFIX }}
+          # prerelease
           type=raw,event=tag,value=prerelease-latest,enable=${{ startsWith(github.ref, 'refs/tags/') && contains(github.ref, 'pre') && matrix.image_type == 'alpine' }},suffix=
           type=raw,event=tag,value=prerelease-latest,enable=${{ startsWith(github.ref, 'refs/tags/') && contains(github.ref, 'pre') }},suffix=${{ env.SUFFIX }}
+          # latest
           type=raw,event=tag,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/') && !contains(github.ref, 'pre') && matrix.image_type == 'alpine' }},suffix=
           type=raw,event=tag,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/') && !contains(github.ref, 'pre') }},suffix=${{ env.SUFFIX }}
+          # pr
           type=ref,event=pr,suffix=${{ env.SUFFIX }}
+          # sha
           type=sha,suffix=${{ env.SUFFIX }}
+        flavor: |
+          # This is disabled here so we can use the raw form above
+          latest=false
+          # Suffix is not used here since there's no way to disable it above
 
     - name: Login to Packages Container registry
       uses: docker/login-action@v2
