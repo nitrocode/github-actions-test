@@ -31,15 +31,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      if: false
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
+      if: false
       with:
         image: tonistiigi/binfmt:latest
         platforms: arm64,arm
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
+      if: false
 
     - name: Docker meta
       id: meta
@@ -62,9 +65,6 @@ jobs:
           type=raw,event=tag,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/') && !contains(github.ref, 'pre') }},suffix=${{ env.SUFFIX }}
           type=ref,event=pr,suffix=${{ env.SUFFIX }}
           type=sha,suffix=${{ env.SUFFIX }}
-        flavor: |
-          latest=${{ contains(fromJson('["push", "pull_request"]'), github.event_name) && startsWith(github.ref, 'refs/tags/') }}
-          suffix=${{ format('-{0}', matrix.image_type) }}
 
     - name: Login to Packages Container registry
       uses: docker/login-action@v2
